@@ -98,6 +98,7 @@
     {% endstyle %}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'accessibility-contrast.css' | asset_url | stylesheet_tag }}
 
     {%- unless settings.font_body.system? -%}
       {{ settings.font_body | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}

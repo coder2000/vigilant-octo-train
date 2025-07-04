@@ -1,0 +1,186 @@
+/* Accessibility and Contrast Improvements */
+
+/* Ensure minimum contrast ratios for all text elements */
+:root {
+  --text-high-contrast: #ffffff;
+  --text-medium-contrast: #f5f5f5;
+  --text-low-contrast: #e8e8e8;
+  --accent-high-contrast: #d4a574; /* Lighter brown for better contrast */
+  --error-color: #ff6b6b;
+  --success-color: #51cf66;
+  --warning-color: #ffd43b;
+}
+
+/* High contrast text for important elements */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-high-contrast) !important;
+}
+
+/* Ensure button text has sufficient contrast */
+.btn, button, input[type="submit"] {
+  color: var(--text-high-contrast);
+  background-color: var(--color-accent);
+  border: 2px solid transparent;
+}
+
+.btn:hover, button:hover, input[type="submit"]:hover {
+  background-color: var(--accent-high-contrast);
+  color: var(--color-background);
+}
+
+/* Improve link contrast */
+a {
+  color: var(--text-medium-contrast);
+  text-decoration: underline;
+}
+
+a:hover, a:focus {
+  color: var(--text-high-contrast);
+  text-decoration: none;
+}
+
+/* Form input contrast */
+input, textarea, select {
+  background-color: var(--color-secondary);
+  color: var(--text-high-contrast);
+  border: 2px solid rgba(245, 245, 245, 0.3);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--accent-high-contrast);
+  outline: 2px solid var(--accent-high-contrast);
+  outline-offset: 2px;
+}
+
+/* Placeholder text contrast */
+input::placeholder, textarea::placeholder {
+  color: var(--text-low-contrast);
+  opacity: 1;
+}
+
+/* Navigation contrast */
+.navigation__item a {
+  color: var(--text-medium-contrast) !important;
+}
+
+.navigation__item a:hover, .navigation__item a:focus {
+  color: var(--text-high-contrast) !important;
+  background-color: rgba(245, 245, 245, 0.1);
+}
+
+/* Footer text contrast */
+.footer {
+  color: var(--text-medium-contrast);
+}
+
+.footer h3 {
+  color: var(--accent-high-contrast) !important;
+}
+
+.footer a {
+  color: var(--text-medium-contrast);
+}
+
+.footer a:hover, .footer a:focus {
+  color: var(--text-high-contrast);
+}
+
+/* Product card contrast */
+.product-card__title {
+  color: var(--text-high-contrast) !important;
+}
+
+.product-card__price {
+  color: var(--text-medium-contrast);
+}
+
+/* Error and success states */
+.error {
+  color: var(--error-color);
+  background-color: rgba(255, 107, 107, 0.1);
+  border: 1px solid var(--error-color);
+}
+
+.success {
+  color: var(--success-color);
+  background-color: rgba(81, 207, 102, 0.1);
+  border: 1px solid var(--success-color);
+}
+
+.warning {
+  color: var(--warning-color);
+  background-color: rgba(255, 212, 59, 0.1);
+  border: 1px solid var(--warning-color);
+}
+
+/* Improve opacity-based elements */
+.sarcastic-text {
+  opacity: 1 !important;
+  color: var(--text-low-contrast) !important;
+}
+
+/* Cart drawer contrast */
+.cart-drawer {
+  background-color: var(--color-background);
+  color: var(--text-medium-contrast);
+}
+
+.cart-drawer h2, .cart-drawer h3 {
+  color: var(--text-high-contrast) !important;
+}
+
+/* Search results contrast */
+.search-result-title a {
+  color: var(--text-high-contrast) !important;
+}
+
+.search-result-description {
+  color: var(--text-medium-contrast);
+}
+
+/* Announcement bar contrast */
+.announcement-bar {
+  background-color: var(--color-accent);
+  color: var(--text-high-contrast);
+}
+
+/* Focus indicators for accessibility */
+*:focus {
+  outline: 2px solid var(--accent-high-contrast);
+  outline-offset: 2px;
+}
+
+/* Skip to content link */
+.skip-to-content-link:focus {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--accent-high-contrast);
+  color: var(--color-background);
+  padding: 1rem;
+  text-decoration: none;
+  z-index: 9999;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-text: #ffffff;
+    --color-background: #000000;
+    --color-secondary: #333333;
+    --color-accent: #ffff00;
+  }
+  
+  .btn, button, input[type="submit"] {
+    border: 3px solid var(--text-high-contrast);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
