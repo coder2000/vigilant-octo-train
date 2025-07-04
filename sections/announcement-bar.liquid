@@ -1,0 +1,70 @@
+{%- style -%}
+  .announcement-bar {
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    text-align: center;
+    padding: 1rem 2rem;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .announcement-bar__message {
+    font-size: 1.4rem;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+  }
+
+  .announcement-bar__link {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .announcement-bar__link:hover {
+    text-decoration: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .announcement-bar {
+      padding: 0.8rem 1rem;
+    }
+    
+    .announcement-bar__message {
+      font-size: 1.2rem;
+    }
+  }
+{%- endstyle -%}
+
+{%- if section.settings.message != blank -%}
+  <div class="announcement-bar">
+    <p class="announcement-bar__message">
+      {%- if section.settings.link != blank -%}
+        <a href="{{ section.settings.link }}" class="announcement-bar__link">
+          {{ section.settings.message }}
+        </a>
+      {%- else -%}
+        {{ section.settings.message }}
+      {%- endif -%}
+    </p>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "message",
+      "default": "Welcome to Dead Inside Depot - Free shipping on orders over $50",
+      "label": "Message"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,415 @@
+{% comment %}
+  Dead Inside Depot - Article Template
+  Individual blog post with our signature dark wisdom
+{% endcomment %}
+
+<article class="article-wrapper">
+  <div class="article-container">
+    <header class="article-header">
+      {%- if article.image -%}
+        <div class="article-featured-image">
+          {{ article.image | image_url: width: 1200 | image_tag: 
+            loading: 'eager',
+            sizes: '100vw',
+            widths: '400, 500, 600, 700, 800, 900, 1000, 1200',
+            alt: article.image.alt | escape
+          }}
+        </div>
+      {%- endif -%}
+
+      <div class="article-meta">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+          {{ article.published_at | date: '%B %d, %Y' }}
+        </time>
+        {%- if article.author != blank -%}
+          <span class="article-author">by {{ article.author }}</span>
+        {%- endif -%}
+        <a href="{{ blog.url }}" class="article-blog-link">{{ blog.title }}</a>
+      </div>
+
+      <h1 class="article-title">{{ article.title }}</h1>
+    </header>
+
+    <div class="article-content">
+      {{ article.content }}
+    </div>
+
+    {%- if article.tags.size > 0 -%}
+      <div class="article-tags">
+        <h3>Tags:</h3>
+        <ul class="article-tags-list">
+          {%- for tag in article.tags -%}
+            <li class="article-tag">
+              <a href="{{ blog.url }}/tagged/{{ tag | handle }}">#{{ tag }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+
+    <div class="article-navigation">
+      {%- if blog.previous_article -%}
+        <a href="{{ blog.previous_article.url }}" class="article-nav article-nav--prev">
+          {% render 'icon', icon: 'chevron-left', size: 20 %}
+          <div class="article-nav-content">
+            <span class="article-nav-label">Previous</span>
+            <span class="article-nav-title">{{ blog.previous_article.title }}</span>
+          </div>
+        </a>
+      {%- endif -%}
+
+      {%- if blog.next_article -%}
+        <a href="{{ blog.next_article.url }}" class="article-nav article-nav--next">
+          <div class="article-nav-content">
+            <span class="article-nav-label">Next</span>
+            <span class="article-nav-title">{{ blog.next_article.title }}</span>
+          </div>
+          {% render 'icon', icon: 'chevron-right', size: 20 %}
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if blog.comments_enabled? -%}
+      <div class="article-comments">
+        <h3>Comments ({{ article.comments_count }})</h3>
+        
+        {%- paginate article.comments by 5 -%}
+          {%- for comment in article.comments -%}
+            <div class="comment">
+              <div class="comment-header">
+                <strong class="comment-author">{{ comment.author }}</strong>
+                <time class="comment-date">{{ comment.created_at | date: '%B %d, %Y at %I:%M %p' }}</time>
+              </div>
+              <div class="comment-content">
+                {{ comment.content }}
+              </div>
+            </div>
+          {%- endfor -%}
+
+          {%- if paginate.pages > 1 -%}
+            {% render 'pagination', paginate: paginate, anchor: '#comments' %}
+          {%- endif -%}
+        {%- endpaginate -%}
+
+        <div class="comment-form-wrapper">
+          <h4>Leave a Comment</h4>
+          {% form 'new_comment', article %}
+            <div class="comment-form-fields">
+              <div class="field">
+                <label for="CommentAuthor">Name *</label>
+                <input type="text" name="comment[author]" id="CommentAuthor" required>
+              </div>
+              
+              <div class="field">
+                <label for="CommentEmail">Email *</label>
+                <input type="email" name="comment[email]" id="CommentEmail" required>
+              </div>
+              
+              <div class="field field--full">
+                <label for="CommentBody">Comment *</label>
+                <textarea name="comment[body]" id="CommentBody" required></textarea>
+              </div>
+            </div>
+            
+            <button type="submit" class="comment-submit">Post Comment</button>
+          {% endform %}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</article>
+
+<style>
+  .article-wrapper {
+    padding: 4rem 2rem;
+  }
+
+  .article-container {
+    max-width: 80rem;
+    margin: 0 auto;
+  }
+
+  .article-featured-image {
+    margin-bottom: 3rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .article-featured-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    font-size: 1.4rem;
+    color: var(--color-accent);
+    flex-wrap: wrap;
+  }
+
+  .article-blog-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .article-blog-link:hover {
+    text-decoration: underline;
+  }
+
+  .article-title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--color-text);
+    margin-bottom: 3rem;
+    line-height: 1.2;
+  }
+
+  .article-content {
+    color: var(--color-text);
+    line-height: 1.8;
+    font-size: 1.6rem;
+    margin-bottom: 4rem;
+  }
+
+  .article-content h1,
+  .article-content h2,
+  .article-content h3,
+  .article-content h4,
+  .article-content h5,
+  .article-content h6 {
+    font-family: var(--font-heading-family);
+    color: var(--color-text);
+    margin: 3rem 0 1.5rem 0;
+  }
+
+  .article-content p {
+    margin-bottom: 2rem;
+  }
+
+  .article-content a {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  .article-content a:hover {
+    color: var(--color-primary);
+  }
+
+  .article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.3rem;
+    margin: 2rem 0;
+  }
+
+  .article-tags {
+    margin-bottom: 4rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(13, 13, 13, 0.9) 100%);
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-secondary);
+  }
+
+  .article-tags h3 {
+    font-family: var(--font-heading-family);
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+  }
+
+  .article-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .article-tag a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: 0.3rem;
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+  }
+
+  .article-tag a:hover {
+    background-color: var(--color-accent);
+    color: var(--color-background);
+  }
+
+  .article-navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .article-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(13, 13, 13, 0.9) 100%);
+    border: 1px solid var(--color-secondary);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: all 0.3s ease;
+  }
+
+  .article-nav:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .article-nav--next {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .article-nav-label {
+    font-size: 1.2rem;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+  }
+
+  .article-nav-title {
+    font-weight: bold;
+    font-size: 1.4rem;
+  }
+
+  .article-comments {
+    border-top: 2px solid var(--color-secondary);
+    padding-top: 4rem;
+  }
+
+  .article-comments h3,
+  .article-comments h4 {
+    font-family: var(--font-heading-family);
+    color: var(--color-text);
+    margin-bottom: 2rem;
+  }
+
+  .comment {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(13, 13, 13, 0.9) 100%);
+    border: 1px solid var(--color-secondary);
+    border-radius: 0.5rem;
+  }
+
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+  }
+
+  .comment-author {
+    color: var(--color-accent);
+  }
+
+  .comment-date {
+    color: var(--color-text);
+    opacity: 0.7;
+  }
+
+  .comment-content {
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  .comment-form-wrapper {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(13, 13, 13, 0.9) 100%);
+    border: 1px solid var(--color-secondary);
+    border-radius: 0.5rem;
+  }
+
+  .comment-form-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .field--full {
+    grid-column: 1 / -1;
+  }
+
+  .field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+    font-weight: bold;
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-secondary);
+    border-radius: 0.3rem;
+    color: var(--color-text);
+    font-size: 1.4rem;
+  }
+
+  .field textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .comment-submit {
+    padding: 1.2rem 2.4rem;
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    border: none;
+    border-radius: 0.3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .comment-submit:hover {
+    background-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+
+  @media screen and (max-width: 749px) {
+    .article-wrapper {
+      padding: 3rem 1rem;
+    }
+
+    .article-meta {
+      gap: 1rem;
+    }
+
+    .article-navigation {
+      grid-template-columns: 1fr;
+    }
+
+    .article-nav--next {
+      justify-self: start;
+      text-align: left;
+    }
+
+    .comment-form-fields {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

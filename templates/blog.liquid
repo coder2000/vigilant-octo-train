@@ -1,0 +1,282 @@
+{% comment %}
+  Dead Inside Depot - Blog Template
+  Where we share our darkest thoughts and candle wisdom
+{% endcomment %}
+
+<div class="blog-wrapper">
+  <div class="blog-container">
+    <header class="blog-header">
+      <h1 class="blog-title">{{ blog.title }}</h1>
+      {%- if blog.description != blank -%}
+        <div class="blog-description">
+          {{ blog.description }}
+        </div>
+      {%- endif -%}
+    </header>
+
+    {%- if blog.articles.size > 0 -%}
+      <div class="blog-articles">
+        {%- for article in blog.articles -%}
+          <article class="blog-article">
+            {%- if article.image -%}
+              <div class="blog-article__image">
+                <a href="{{ article.url }}">
+                  {{ article.image | image_url: width: 600 | image_tag: 
+                    loading: 'lazy',
+                    sizes: '(min-width: 990px) 50vw, 100vw',
+                    widths: '300, 400, 500, 600, 700, 800, 900, 1000',
+                    alt: article.image.alt | escape
+                  }}
+                </a>
+              </div>
+            {%- endif -%}
+
+            <div class="blog-article__content">
+              <div class="blog-article__meta">
+                <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                  {{ article.published_at | date: '%B %d, %Y' }}
+                </time>
+                {%- if article.author != blank -%}
+                  <span class="blog-article__author">by {{ article.author }}</span>
+                {%- endif -%}
+              </div>
+
+              <h2 class="blog-article__title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h2>
+
+              {%- if article.excerpt != blank -%}
+                <div class="blog-article__excerpt">
+                  {{ article.excerpt }}
+                </div>
+              {%- else -%}
+                <div class="blog-article__excerpt">
+                  {{ article.content | strip_html | truncate: 200 }}
+                </div>
+              {%- endif -%}
+
+              <div class="blog-article__footer">
+                <a href="{{ article.url }}" class="blog-article__read-more">
+                  Read More
+                  {% render 'icon', icon: 'arrow-right', size: 16 %}
+                </a>
+
+                {%- if blog.comments_enabled? and article.comments_count > 0 -%}
+                  <div class="blog-article__comments">
+                    {{ article.comments_count }} 
+                    {%- if article.comments_count == 1 -%}comment{%- else -%}comments{%- endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        {% render 'pagination', paginate: paginate %}
+      {%- endif -%}
+    {%- else -%}
+      <div class="blog-empty">
+        <h2>No Articles Yet</h2>
+        <p>The void is still being filled with our existential musings. Check back soon for deep thoughts and candle wisdom.</p>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .blog-wrapper {
+    padding: 4rem 2rem;
+  }
+
+  .blog-container {
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  .blog-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--color-secondary);
+  }
+
+  .blog-title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+  }
+
+  .blog-description {
+    font-size: 1.8rem;
+    color: var(--color-text);
+    opacity: 0.8;
+    max-width: 60rem;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .blog-articles {
+    display: grid;
+    gap: 4rem;
+  }
+
+  .blog-article {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    align-items: start;
+    padding: 3rem;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(13, 13, 13, 0.9) 100%);
+    border: 1px solid var(--color-secondary);
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .blog-article:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.2);
+  }
+
+  .blog-article__image {
+    overflow: hidden;
+    border-radius: 0.3rem;
+  }
+
+  .blog-article__image img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .blog-article:hover .blog-article__image img {
+    transform: scale(1.05);
+  }
+
+  .blog-article__meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: var(--color-accent);
+  }
+
+  .blog-article__author {
+    opacity: 0.8;
+  }
+
+  .blog-article__title {
+    margin: 0 0 1.5rem 0;
+  }
+
+  .blog-article__title a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-family: var(--font-heading-family);
+    font-size: 2.4rem;
+    font-weight: bold;
+    line-height: 1.3;
+    transition: color 0.3s ease;
+  }
+
+  .blog-article__title a:hover {
+    color: var(--color-accent);
+  }
+
+  .blog-article__excerpt {
+    color: var(--color-text);
+    opacity: 0.9;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .blog-article__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .blog-article__read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    transition: all 0.3s ease;
+  }
+
+  .blog-article__read-more:hover {
+    color: var(--color-primary);
+    transform: translateX(5px);
+  }
+
+  .blog-article__comments {
+    color: var(--color-text);
+    opacity: 0.7;
+    font-size: 1.4rem;
+  }
+
+  .blog-empty {
+    text-align: center;
+    padding: 6rem 2rem;
+    color: var(--color-text);
+  }
+
+  .blog-empty h2 {
+    font-family: var(--font-heading-family);
+    font-size: 3rem;
+    color: var(--color-accent);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+  }
+
+  .blog-empty p {
+    font-size: 1.8rem;
+    opacity: 0.8;
+    max-width: 50rem;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  @media screen and (max-width: 990px) {
+    .blog-article {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .blog-article__image img {
+      height: 200px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-wrapper {
+      padding: 3rem 1rem;
+    }
+
+    .blog-article {
+      padding: 2rem;
+    }
+
+    .blog-article__title a {
+      font-size: 2rem;
+    }
+
+    .blog-article__footer {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+  }
+</style>

@@ -1,0 +1,24 @@
+{
+  "current": {
+    "color_primary": "#1a1a1a",
+    "color_secondary": "#333333",
+    "color_accent": "#8b0000",
+    "color_text": "#e0e0e0",
+    "color_background": "#0d0d0d",
+    "tagline": "From the makers of sarcasm, sadness and scented candles",
+    "show_tagline": true,
+    "sections": {
+      "header": {
+        "type": "header"
+      },
+      "footer": {
+        "type": "footer"
+      }
+    },
+    "content_for_index": [
+      "hero-banner",
+      "featured-collection",
+      "newsletter"
+    ]
+  }
+}

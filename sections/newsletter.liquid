@@ -1,0 +1,281 @@
+{%- style -%}
+  .newsletter {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    padding: 4rem 2rem;
+    border-top: 2px solid var(--color-secondary);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .newsletter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 30% 70%, rgba(139, 0, 0, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .newsletter__container {
+    max-width: 60rem;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .newsletter__title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+  }
+
+  .newsletter__description {
+    color: var(--color-text);
+    font-size: 1.6rem;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+  }
+
+  .newsletter__form {
+    display: flex;
+    gap: 1rem;
+    max-width: 50rem;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .newsletter__input {
+    flex: 1;
+    min-width: 250px;
+    padding: 1.5rem 2rem;
+    border: 2px solid var(--color-secondary);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--color-text);
+    border-radius: 0.5rem;
+    font-size: 1.6rem;
+    transition: all 0.3s ease;
+  }
+
+  .newsletter__input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .newsletter__input::placeholder {
+    color: rgba(224, 224, 224, 0.6);
+  }
+
+  .newsletter__button {
+    padding: 1.5rem 3rem;
+    background: linear-gradient(45deg, var(--color-accent), #a00000);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .newsletter__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+  }
+
+  .newsletter__disclaimer {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: var(--color-text);
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  .newsletter__success {
+    background-color: rgba(0, 128, 0, 0.1);
+    border: 1px solid #008000;
+    color: #00ff00;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    margin-top: 2rem;
+    display: none;
+  }
+
+  .newsletter__error {
+    background-color: rgba(139, 0, 0, 0.1);
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    margin-top: 2rem;
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .newsletter__form {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .newsletter__input {
+      width: 100%;
+      min-width: auto;
+    }
+    
+    .newsletter__button {
+      width: 100%;
+    }
+  }
+{%- endstyle -%}
+
+<section class="newsletter">
+  <div class="newsletter__container">
+    <h2 class="newsletter__title">
+      {%- if section.settings.title != blank -%}
+        {{ section.settings.title }}
+      {%- else -%}
+        Join Our Cult of Sadness
+      {%- endif -%}
+    </h2>
+    
+    {%- if section.settings.description != blank -%}
+      <p class="newsletter__description">
+        {{ section.settings.description }}
+      </p>
+    {%- endif -%}
+
+    <form class="newsletter__form" action="{{ routes.root_url }}contact#contact_form" method="post" id="newsletter-form">
+      <input type="hidden" name="form_type" value="customer">
+      <input type="hidden" name="utf8" value="✓">
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      
+      <input 
+        type="email" 
+        name="contact[email]" 
+        class="newsletter__input"
+        placeholder="Enter your email to embrace the void"
+        required
+        aria-label="Email address"
+      >
+      
+      <button type="submit" class="newsletter__button">
+        {%- if section.settings.button_text != blank -%}
+          {{ section.settings.button_text }}
+        {%- else -%}
+          Subscribe to Despair
+        {%- endif -%}
+      </button>
+    </form>
+
+    <div class="newsletter__success" id="newsletter-success">
+      ✅ Welcome to the darkness! Check your email for confirmation.
+    </div>
+
+    <div class="newsletter__error" id="newsletter-error">
+      ❌ Something went wrong. Even our newsletter is broken.
+    </div>
+
+    {%- if section.settings.show_disclaimer -%}
+      <p class="newsletter__disclaimer">
+        {%- if section.settings.disclaimer_text != blank -%}
+          {{ section.settings.disclaimer_text }}
+        {%- else -%}
+          We promise to only send you the finest existential crises and candle recommendations. Unsubscribe anytime you find hope again.
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('newsletter-form');
+  const successMessage = document.getElementById('newsletter-success');
+  const errorMessage = document.getElementById('newsletter-error');
+
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          successMessage.style.display = 'block';
+          errorMessage.style.display = 'none';
+          form.reset();
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      })
+      .catch(error => {
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
+      });
+    });
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Join Our Cult of Sadness"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Subscribe to our newsletter for weekly doses of existential dread, new product launches, and the occasional life crisis."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Subscribe to Despair"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_disclaimer",
+      "label": "Show disclaimer",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer_text",
+      "label": "Disclaimer text",
+      "default": "We promise to only send you the finest existential crises and candle recommendations. Unsubscribe anytime you find hope again."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

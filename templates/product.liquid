@@ -1,0 +1,280 @@
+{% comment %}
+  Dead Inside Depot - Product Template
+  Individual product page with our signature dark humor
+{% endcomment %}
+
+<div class="product-wrapper">
+  <div class="product-container">
+    <div class="product-media">
+      {% if product.featured_media %}
+        <div class="product-media__item">
+          {{ product.featured_media | image_url: width: 600 | image_tag: 
+            loading: 'eager',
+            sizes: '(min-width: 750px) 50vw, 100vw',
+            widths: '246, 493, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946',
+            alt: product.featured_media.alt | escape
+          }}
+        </div>
+        
+        {% if product.media.size > 1 %}
+          <div class="product-media__thumbs">
+            {% for media in product.media limit: 6 %}
+              <button class="product-media__thumb {% if forloop.first %}active{% endif %}" 
+                      data-media-id="{{ media.id }}">
+                {{ media | image_url: width: 100 | image_tag: 
+                  loading: 'lazy',
+                  alt: media.alt | escape
+                }}
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="product-info">
+      <h1 class="product-title">{{ product.title }}</h1>
+      
+      <div class="product-price">
+        {% if product.compare_at_price > product.price %}
+          <span class="price-compare">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+        <span class="price-current">{{ product.price | money }}</span>
+      </div>
+
+      {% if product.description != blank %}
+        <div class="product-description">
+          {{ product.description }}
+        </div>
+      {% endif %}
+
+      {% unless product.has_only_default_variant %}
+        <div class="product-variants">
+          {% for option in product.options_with_values %}
+            <div class="product-option">
+              <label for="Option-{{ forloop.index }}">{{ option.name }}</label>
+              <select id="Option-{{ forloop.index }}" name="options[{{ option.name | escape }}]">
+                {% for value in option.values %}
+                  <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endfor %}
+        </div>
+      {% endunless %}
+
+      <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="product-form">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        
+        <div class="product-form__buttons">
+          <button type="submit" name="add" class="btn btn--primary btn--full-width" 
+                  {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+            <span>
+              {% if product.selected_or_first_available_variant.available %}
+                Add to Cart - Embrace the Darkness
+              {% else %}
+                Sold Out - Even Our Despair Has Limits
+              {% endif %}
+            </span>
+          </button>
+        </div>
+      </form>
+
+      {% if product.tags contains 'existential-crisis' %}
+        <div class="product-warning">
+          ⚠️ Warning: May cause sudden realizations about the meaninglessness of existence. Side effects include staring into the void and questioning life choices.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+.product-wrapper {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.product-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.product-media__item img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.product-media__thumbs {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.product-media__thumb {
+  border: 2px solid transparent;
+  border-radius: 0.3rem;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.product-media__thumb.active,
+.product-media__thumb:hover {
+  border-color: var(--color-accent);
+}
+
+.product-media__thumb img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 0.2rem;
+}
+
+.product-title {
+  font-family: var(--font-heading-family);
+  font-size: 2.5rem;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.product-price {
+  margin-bottom: 1.5rem;
+}
+
+.price-compare {
+  color: var(--color-accent);
+  text-decoration: line-through;
+  margin-right: 1rem;
+  font-size: 1.4rem;
+}
+
+.price-current {
+  color: var(--color-text);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.product-description {
+  color: var(--color-text);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.product-option {
+  margin-bottom: 1.5rem;
+}
+
+.product-option label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.product-option select {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--color-secondary);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  border-radius: 0.3rem;
+  font-size: 1.4rem;
+}
+
+.btn {
+  padding: 1.5rem 2rem;
+  border: none;
+  border-radius: 0.3rem;
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn--primary {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background-color: #a00000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.btn--primary:disabled {
+  background-color: var(--color-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn--full-width {
+  width: 100%;
+}
+
+.product-warning {
+  background-color: rgba(139, 0, 0, 0.1);
+  border: 1px solid var(--color-accent);
+  padding: 1rem;
+  border-radius: 0.3rem;
+  margin-top: 2rem;
+  color: var(--color-text);
+  font-style: italic;
+}
+
+@media screen and (max-width: 749px) {
+  .product-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .product-title {
+    font-size: 2rem;
+  }
+}
+</style>
+
+<script>
+// Product media gallery functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const thumbs = document.querySelectorAll('.product-media__thumb');
+  const mainImage = document.querySelector('.product-media__item img');
+  
+  if (!mainImage || thumbs.length === 0) return;
+  
+  thumbs.forEach(thumb => {
+    thumb.addEventListener('click', function() {
+      // Remove active class from all thumbs
+      thumbs.forEach(t => t.classList.remove('active'));
+      // Add active class to clicked thumb
+      this.classList.add('active');
+      
+      // Get the media ID from the clicked thumbnail
+      const mediaId = this.dataset.mediaId;
+      const thumbImg = this.querySelector('img');
+      
+      if (thumbImg && thumbImg.src) {
+        // Create the new source URL by replacing the width parameter
+        const newSrc = thumbImg.src.replace(/width=\d+/, 'width=600');
+        mainImage.src = newSrc;
+        mainImage.alt = thumbImg.alt;
+      }
+    });
+  });
+});
+</script>

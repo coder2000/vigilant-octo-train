@@ -1,0 +1,213 @@
+{%- style -%}
+  .image-banner {
+    position: relative;
+    overflow: hidden;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background);
+  }
+
+  .image-banner__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .image-banner__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7) contrast(1.1);
+  }
+
+  .image-banner__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 80rem;
+    margin: 0 auto;
+    color: var(--color-text);
+  }
+
+  .image-banner__heading {
+    font-family: var(--font-heading-family);
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: bold;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+    line-height: 1.1;
+  }
+
+  .image-banner__text {
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+    max-width: 60rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .image-banner__buttons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .image-banner__button {
+    display: inline-block;
+    padding: 1.5rem 3rem;
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    border-radius: 0.3rem;
+    transition: all 0.3s ease;
+    border: 2px solid var(--color-accent);
+  }
+
+  .image-banner__button:hover {
+    background-color: transparent;
+    color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+  }
+
+  .image-banner__button--secondary {
+    background-color: transparent;
+    color: var(--color-text);
+    border-color: var(--color-text);
+  }
+
+  .image-banner__button--secondary:hover {
+    background-color: var(--color-text);
+    color: var(--color-background);
+  }
+
+  @media screen and (max-width: 749px) {
+    .image-banner {
+      min-height: 40vh;
+    }
+
+    .image-banner__content {
+      padding: 3rem 1rem;
+    }
+
+    .image-banner__buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .image-banner__button {
+      width: 100%;
+      max-width: 30rem;
+    }
+  }
+{%- endstyle -%}
+
+<div class="image-banner">
+  {%- if section.settings.image != blank -%}
+    <div class="image-banner__media">
+      {{ section.settings.image | image_url: width: 1920 | image_tag: 
+        loading: 'lazy',
+        sizes: '100vw',
+        widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+        alt: section.settings.image.alt | escape
+      }}
+    </div>
+  {%- endif -%}
+
+  <div class="image-banner__content">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="image-banner__heading">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    {%- if section.settings.text != blank -%}
+      <div class="image-banner__text">
+        {{ section.settings.text }}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label_1 != blank or section.settings.button_label_2 != blank -%}
+      <div class="image-banner__buttons">
+        {%- if section.settings.button_label_1 != blank -%}
+          <a href="{{ section.settings.button_link_1 | default: '#' }}" class="image-banner__button">
+            {{ section.settings.button_label_1 }}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.button_label_2 != blank -%}
+          <a href="{{ section.settings.button_link_2 | default: '#' }}" class="image-banner__button image-banner__button--secondary">
+            {{ section.settings.button_label_2 }}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image banner",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Embrace the Darkness",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "default": "Sometimes you need to light a candle to see how dark it really is.",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "button_label_1",
+      "default": "Shop Now",
+      "label": "First button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_1",
+      "label": "First button link"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "default": "Learn More",
+      "label": "Second button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Second button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image banner"
+    }
+  ]
+}
+{% endschema %}

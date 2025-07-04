@@ -1,0 +1,270 @@
+{%- style -%}
+  .hero-banner {
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%);
+    position: relative;
+    overflow: hidden;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(139, 69, 19, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 80rem;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: bold;
+    color: var(--color-text);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3rem;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+    line-height: 1.1;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--color-accent);
+    margin-bottom: 3rem;
+    font-style: italic;
+    opacity: 0.9;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .hero-description {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    color: var(--color-text);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    max-width: 60rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-btn {
+    padding: 1.5rem 3rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-btn--primary {
+    background: linear-gradient(45deg, var(--color-accent), #a00000);
+    color: white;
+    box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+  }
+
+  .hero-btn--primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.5);
+  }
+
+  .hero-btn--secondary {
+    background: transparent;
+    color: var(--color-text);
+    border: 2px solid var(--color-text);
+  }
+
+  .hero-btn--secondary:hover {
+    background-color: var(--color-text);
+    color: var(--color-background);
+    transform: translateY(-3px);
+  }
+
+  .hero-floating-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .floating-candle {
+    position: absolute;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .floating-candle:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+
+  .floating-candle:nth-child(2) {
+    top: 20%;
+    right: 15%;
+    animation-delay: 2s;
+  }
+
+  .floating-candle:nth-child(3) {
+    bottom: 15%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  @media screen and (max-width: 749px) {
+    .hero-banner {
+      min-height: 50vh;
+      padding: 3rem 1rem;
+    }
+    
+    .hero-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .hero-btn {
+      width: 100%;
+      max-width: 30rem;
+    }
+  }
+{%- endstyle -%}
+
+<section class="hero-banner">
+  <div class="hero-floating-elements">
+    <div class="floating-candle">🕯️</div>
+    <div class="floating-candle">🕯️</div>
+    <div class="floating-candle">🕯️</div>
+  </div>
+  
+  <div class="hero-content">
+    <h1 class="hero-title">
+      {%- if section.settings.hero_title != blank -%}
+        {{ section.settings.hero_title }}
+      {%- else -%}
+        Welcome to the Void
+      {%- endif -%}
+    </h1>
+    
+    <p class="hero-subtitle">
+      {%- if section.settings.hero_subtitle != blank -%}
+        {{ section.settings.hero_subtitle }}
+      {%- else -%}
+        From the makers of sarcasm, sadness and scented candles
+      {%- endif -%}
+    </p>
+    
+    {%- if section.settings.hero_description != blank -%}
+      <p class="hero-description">
+        {{ section.settings.hero_description }}
+      </p>
+    {%- endif -%}
+    
+    <div class="hero-buttons">
+      {%- if section.settings.button_primary_text != blank -%}
+        <a href="{{ section.settings.button_primary_link | default: '/collections/all' }}" 
+           class="hero-btn hero-btn--primary">
+          {{ section.settings.button_primary_text }}
+        </a>
+      {%- endif -%}
+      
+      {%- if section.settings.button_secondary_text != blank -%}
+        <a href="{{ section.settings.button_secondary_link | default: '/pages/about' }}" 
+           class="hero-btn hero-btn--secondary">
+          {{ section.settings.button_secondary_text }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "Welcome to the Void"
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero subtitle",
+      "default": "From the makers of sarcasm, sadness and scented candles"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_description",
+      "label": "Hero description",
+      "default": "Where existential dread meets premium home fragrance. Because nothing says 'I've given up' like a beautifully scented room."
+    },
+    {
+      "type": "text",
+      "id": "button_primary_text",
+      "label": "Primary button text",
+      "default": "Shop Our Despair"
+    },
+    {
+      "type": "url",
+      "id": "button_primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "button_secondary_text",
+      "label": "Secondary button text",
+      "default": "Learn About Our Misery"
+    },
+    {
+      "type": "url",
+      "id": "button_secondary_link",
+      "label": "Secondary button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

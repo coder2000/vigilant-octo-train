@@ -1,0 +1,284 @@
+{% comment %}
+  Dead Inside Depot - Search Results
+  Finding what you're looking for in the darkness
+{% endcomment %}
+
+<div class="search-page">
+  <div class="search-container">
+    <div class="search-header">
+      <h1 class="search-title">Search Results</h1>
+      {%- if search.performed -%}
+        <p class="search-summary">
+          {%- if search.results_count == 0 -%}
+            No results found for "<strong>{{ search.terms | escape }}</strong>". 
+            Like your hopes and dreams, it seems to have vanished into the void.
+          {%- else -%}
+            {{ search.results_count }} 
+            {%- if search.results_count == 1 -%}result{%- else -%}results{%- endif -%} 
+            found for "<strong>{{ search.terms | escape }}</strong>"
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </div>
+
+    <div class="search-form-wrapper">
+      <form action="{{ routes.search_url }}" method="get" class="search-form">
+        <div class="search-input-wrapper">
+          <input 
+            type="search" 
+            name="q" 
+            value="{{ search.terms | escape }}" 
+            placeholder="Search for existential dread..."
+            class="search-input"
+            autocomplete="off"
+          >
+          <button type="submit" class="search-button">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.5 11H11.71L11.43 10.73C12.41 9.59 13 8.11 13 6.5C13 2.91 10.09 0 6.5 0C2.91 0 0 2.91 0 6.5C0 10.09 2.91 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    {%- if search.performed and search.results_count > 0 -%}
+      <div class="search-results">
+        {%- for item in search.results -%}
+          <div class="search-result-item">
+            {%- case item.object_type -%}
+              {%- when 'product' -%}
+                <div class="search-result-product">
+                  {%- if item.featured_media -%}
+                    <div class="search-result-image">
+                      <a href="{{ item.url }}">
+                        {{ item.featured_media | image_url: width: 200 | image_tag: 
+                          loading: 'lazy',
+                          alt: item.featured_media.alt | escape
+                        }}
+                      </a>
+                    </div>
+                  {%- endif -%}
+                  
+                  <div class="search-result-content">
+                    <h3 class="search-result-title">
+                      <a href="{{ item.url }}">{{ item.title | escape }}</a>
+                    </h3>
+                    
+                    {%- if item.price -%}
+                      <div class="search-result-price">
+                        {%- if item.compare_at_price > item.price -%}
+                          <span class="search-result-price--compare">{{ item.compare_at_price | money }}</span>
+                        {%- endif -%}
+                        <span class="search-result-price--current">{{ item.price | money }}</span>
+                      </div>
+                    {%- endif -%}
+                    
+                    {%- if item.description != blank -%}
+                      <div class="search-result-description">
+                        {{ item.description | strip_html | truncate: 150 }}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+                
+              {%- when 'article' -%}
+                <div class="search-result-article">
+                  <h3 class="search-result-title">
+                    <a href="{{ item.url }}">{{ item.title | escape }}</a>
+                  </h3>
+                  <div class="search-result-meta">
+                    {{ item.published_at | date: '%B %d, %Y' }}
+                  </div>
+                  {%- if item.summary != blank -%}
+                    <div class="search-result-description">
+                      {{ item.summary | strip_html | truncate: 150 }}
+                    </div>
+                  {%- endif -%}
+                </div>
+                
+              {%- when 'page' -%}
+                <div class="search-result-page">
+                  <h3 class="search-result-title">
+                    <a href="{{ item.url }}">{{ item.title | escape }}</a>
+                  </h3>
+                  {%- if item.content != blank -%}
+                    <div class="search-result-description">
+                      {{ item.content | strip_html | truncate: 150 }}
+                    </div>
+                  {%- endif -%}
+                </div>
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        {% render 'pagination', paginate: paginate %}
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .search-page {
+    padding: 4rem 2rem;
+    min-height: 50vh;
+  }
+
+  .search-container {
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  .search-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .search-title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+  }
+
+  .search-summary {
+    font-size: 1.6rem;
+    color: var(--color-text);
+    opacity: 0.8;
+  }
+
+  .search-form-wrapper {
+    margin-bottom: 4rem;
+  }
+
+  .search-input-wrapper {
+    display: flex;
+    max-width: 50rem;
+    margin: 0 auto;
+    background-color: var(--color-secondary);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+
+  .search-input-wrapper:focus-within {
+    border-color: var(--color-accent);
+  }
+
+  .search-input {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.6rem;
+  }
+
+  .search-input::placeholder {
+    color: var(--color-text);
+    opacity: 0.6;
+  }
+
+  .search-input:focus {
+    outline: none;
+  }
+
+  .search-button {
+    padding: 1.5rem 2rem;
+    background-color: var(--color-accent);
+    border: none;
+    color: var(--color-background);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .search-button:hover {
+    background-color: var(--color-primary);
+  }
+
+  .search-results {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .search-result-item {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(13, 13, 13, 0.9) 100%);
+    border: 1px solid var(--color-secondary);
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .search-result-item:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .search-result-product {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .search-result-image img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 0.3rem;
+  }
+
+  .search-result-title a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-family: var(--font-heading-family);
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
+  .search-result-title a:hover {
+    color: var(--color-accent);
+  }
+
+  .search-result-price {
+    margin: 1rem 0;
+  }
+
+  .search-result-price--compare {
+    text-decoration: line-through;
+    opacity: 0.6;
+    margin-right: 1rem;
+  }
+
+  .search-result-price--current {
+    color: var(--color-accent);
+    font-weight: bold;
+  }
+
+  .search-result-description {
+    color: var(--color-text);
+    opacity: 0.8;
+    line-height: 1.6;
+  }
+
+  .search-result-meta {
+    color: var(--color-accent);
+    font-size: 1.4rem;
+    margin: 0.5rem 0 1rem 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .search-result-product {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .search-result-image {
+      justify-self: center;
+    }
+  }
+</style>

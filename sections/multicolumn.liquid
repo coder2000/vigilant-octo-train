@@ -1,0 +1,240 @@
+{%- style -%}
+  .multicolumn {
+    padding: 4rem 2rem;
+    background-color: var(--color-background);
+  }
+
+  .multicolumn__container {
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  .multicolumn__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .multicolumn__title {
+    font-family: var(--font-heading-family);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+  }
+
+  .multicolumn__subtitle {
+    font-size: 1.8rem;
+    color: var(--color-accent);
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .multicolumn__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .multicolumn__item {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(13, 13, 13, 0.9) 100%);
+    border: 1px solid var(--color-secondary);
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .multicolumn__item:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-accent);
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.2);
+  }
+
+  .multicolumn__image {
+    margin-bottom: 2rem;
+  }
+
+  .multicolumn__image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.3rem;
+    filter: grayscale(20%) contrast(1.1);
+  }
+
+  .multicolumn__heading {
+    font-family: var(--font-heading-family);
+    font-size: 2rem;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+  }
+
+  .multicolumn__text {
+    color: var(--color-text);
+    opacity: 0.9;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .multicolumn__button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: transparent;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    border: 2px solid var(--color-accent);
+    border-radius: 0.3rem;
+    transition: all 0.3s ease;
+  }
+
+  .multicolumn__button:hover {
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    transform: translateY(-2px);
+  }
+
+  @media screen and (max-width: 749px) {
+    .multicolumn {
+      padding: 3rem 1rem;
+    }
+
+    .multicolumn__list {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .multicolumn__item {
+      padding: 1.5rem;
+    }
+  }
+{%- endstyle -%}
+
+<div class="multicolumn">
+  <div class="multicolumn__container">
+    {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
+      <div class="multicolumn__header">
+        {%- if section.settings.title != blank -%}
+          <h2 class="multicolumn__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <p class="multicolumn__subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="multicolumn__list">
+        {%- for block in section.blocks -%}
+          <li class="multicolumn__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              <div class="multicolumn__image">
+                {{ block.settings.image | image_url: width: 400 | image_tag: 
+                  loading: 'lazy',
+                  sizes: '(min-width: 990px) 400px, (min-width: 750px) 50vw, 100vw',
+                  widths: '200, 300, 400, 500, 600',
+                  alt: block.settings.image.alt | escape
+                }}
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.title != blank -%}
+              <h3 class="multicolumn__heading">{{ block.settings.title }}</h3>
+            {%- endif -%}
+
+            {%- if block.settings.text != blank -%}
+              <div class="multicolumn__text">{{ block.settings.text }}</div>
+            {%- endif -%}
+
+            {%- if block.settings.link_label != blank -%}
+              <a href="{{ block.settings.link | default: '#' }}" class="multicolumn__button">
+                {{ block.settings.link_label }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Multicolumn",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Why Choose Dead Inside Depot?",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Because misery loves company, and company loves candles",
+      "label": "Subheading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Premium Despair",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Hand-crafted with the finest ingredients of existential dread and premium wax. Each candle burns with the intensity of a thousand regrets.</p>",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multicolumn",
+      "blocks": [
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

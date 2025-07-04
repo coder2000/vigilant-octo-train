@@ -1,0 +1,237 @@
+{%- style -%}
+  .footer {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    border-top: 2px solid var(--color-secondary);
+    color: var(--color-text);
+    padding: 3rem 2rem 2rem;
+    margin-top: auto;
+  }
+
+  .footer__content {
+    max-width: 120rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .footer__block h3 {
+    color: var(--color-accent);
+    font-family: var(--font-heading-family);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+  }
+
+  .footer__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer__list li {
+    margin-bottom: 0.8rem;
+  }
+
+  .footer__list a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer__list a:hover {
+    color: var(--color-accent);
+  }
+
+  .footer__newsletter {
+    background: rgba(255,255,255,0.05);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-secondary);
+  }
+
+  .footer__newsletter h3 {
+    margin-top: 0;
+  }
+
+  .footer__newsletter p {
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    opacity: 0.9;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .newsletter-form input {
+    flex: 1;
+    padding: 1rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-secondary);
+    border-radius: 0.3rem;
+    color: var(--color-text);
+    font-size: 1.4rem;
+  }
+
+  .newsletter-form input::placeholder {
+    color: rgba(224, 224, 224, 0.6);
+  }
+
+  .newsletter-form button {
+    padding: 1rem 2rem;
+    background: var(--color-secondary);
+    color: var(--color-text);
+    border: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    transition: all 0.3s ease;
+  }
+
+  .newsletter-form button:hover {
+    background: var(--color-accent);
+    color: var(--color-background);
+  }
+
+  .footer__bottom {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-secondary);
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer__copyright {
+    opacity: 0.8;
+    font-size: 1.3rem;
+  }
+
+  .footer__social {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .footer__social a {
+    color: var(--color-text);
+    font-size: 1.8rem;
+    transition: color 0.3s ease;
+  }
+
+  .footer__social a:hover {
+    color: var(--color-accent);
+  }
+
+  .footer__quote {
+    text-align: center;
+    font-style: italic;
+    color: var(--color-accent);
+    margin-bottom: 2rem;
+    font-size: 1.6rem;
+    opacity: 0.9;
+  }
+
+  @media screen and (max-width: 749px) {
+    .footer__content {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .newsletter-form {
+      flex-direction: column;
+    }
+
+    .footer__bottom {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+{%- endstyle -%}
+
+<footer class="footer">
+  <div class="footer__quote">
+    "Life's too short to pretend you're not dead inside. Might as well smell good while you're at it."
+  </div>
+
+  <div class="footer__content">
+    <div class="footer__block">
+      <h3>Quick Links</h3>
+      <ul class="footer__list">
+        <li><a href="{{ routes.root_url }}">Home</a></li>
+        <li><a href="{{ routes.all_products_collection_url }}">All Products</a></li>
+        <li><a href="/pages/about">About Our Misery</a></li>
+        <li><a href="/pages/contact">Contact (If You Must)</a></li>
+        <li><a href="{{ routes.search_url }}">Search</a></li>
+      </ul>
+    </div>
+
+    <div class="footer__block">
+      <h3>Customer Care</h3>
+      <ul class="footer__list">
+        <li><a href="/pages/shipping">Shipping Info</a></li>
+        <li><a href="/pages/returns">Returns & Exchanges</a></li>
+        <li><a href="/pages/faq">FAQ</a></li>
+        <li><a href="/pages/size-guide">Size Guide</a></li>
+        <li><a href="/pages/care-instructions">Care Instructions</a></li>
+      </ul>
+    </div>
+
+    <div class="footer__block">
+      <h3>Our Collections</h3>
+      <ul class="footer__list">
+        <li><a href="/collections/scented-candles">Scented Candles</a></li>
+        <li><a href="/collections/sarcastic-gifts">Sarcastic Gifts</a></li>
+        <li><a href="/collections/mood-enhancers">Mood "Enhancers"</a></li>
+        <li><a href="/collections/existential-crisis">Existential Crisis Kit</a></li>
+        <li><a href="/collections/sale">Sale Items</a></li>
+      </ul>
+    </div>
+
+    <div class="footer__newsletter">
+      <h3>Join Our Misery</h3>
+      <p>Subscribe to our newsletter for weekly doses of sarcasm, new product launches, and existential dread delivered straight to your inbox.</p>
+      {% form 'customer' %}
+        <div class="newsletter-form">
+          <input type="email" name="contact[email]" placeholder="your.email@sadness.com" required>
+          <button type="submit">Subscribe</button>
+        </div>
+      {% endform %}
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <div class="footer__copyright">
+      <p>&copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. All rights reserved. All happiness sold separately.</p>
+    </div>
+
+    <div class="footer__social">
+      <a href="#" aria-label="Facebook">📘</a>
+      <a href="#" aria-label="Instagram">📷</a>
+      <a href="#" aria-label="Twitter">🐦</a>
+      <a href="#" aria-label="TikTok">🎵</a>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "footer_quote",
+      "label": "Footer Quote",
+      "default": "Life's too short to pretend you're not dead inside. Might as well smell good while you're at it."
+    }
+  ]
+}
+{% endschema %}

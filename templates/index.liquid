@@ -1,0 +1,24 @@
+{% comment %}
+  Dead Inside Depot - Homepage Template
+  The main landing page for our darkly humorous candle store
+{% endcomment %}
+
+{% section 'hero-banner' %}
+{% section 'featured-collection' %}
+{% section 'image-banner' %}
+{% section 'multicolumn' %}
+{% section 'newsletter' %}
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "name": {{ shop.name | json }},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ routes.search_url }}?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "url": {{ shop.url | append: page.url | json }}
+}
+</script>
