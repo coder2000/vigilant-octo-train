@@ -45,7 +45,7 @@
   }
 
   .footer__newsletter {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     padding: 2rem;
     border-radius: 0.5rem;
     border: 1px solid var(--color-secondary);
@@ -168,8 +168,8 @@
       <ul class="footer__list">
         <li><a href="{{ routes.root_url }}">Home</a></li>
         <li><a href="{{ routes.all_products_collection_url }}">All Products</a></li>
-        <li><a href="/pages/about">About Our Misery</a></li>
-        <li><a href="/pages/contact">Contact (If You Must)</a></li>
+        <li><a href="{{ pages['about'].url }}">About Our Misery</a></li>
+        <li><a href="{{ pages['contact'].url }}">Contact (If You Must)</a></li>
         <li><a href="{{ routes.search_url }}">Search</a></li>
       </ul>
     </div>
@@ -177,28 +177,31 @@
     <div class="footer__block">
       <h3>Customer Care</h3>
       <ul class="footer__list">
-        <li><a href="/pages/shipping">Shipping Info</a></li>
-        <li><a href="/pages/returns">Returns & Exchanges</a></li>
-        <li><a href="/pages/faq">FAQ</a></li>
-        <li><a href="/pages/size-guide">Size Guide</a></li>
-        <li><a href="/pages/care-instructions">Care Instructions</a></li>
+        <li><a href="{{ pages['shipping'].url }}">Shipping Info</a></li>
+        <li><a href="{{ pages['returns'].url }}">Returns & Exchanges</a></li>
+        <li><a href="{{ pages['faq'].url }}">FAQ</a></li>
+        <li><a href="{{ pages['size-guide'].url }}">Size Guide</a></li>
+        <li><a href="{{ pages['care-instructions'].url }}">Care Instructions</a></li>
       </ul>
     </div>
 
     <div class="footer__block">
       <h3>Our Collections</h3>
       <ul class="footer__list">
-        <li><a href="/collections/scented-candles">Scented Candles</a></li>
-        <li><a href="/collections/sarcastic-gifts">Sarcastic Gifts</a></li>
-        <li><a href="/collections/mood-enhancers">Mood "Enhancers"</a></li>
-        <li><a href="/collections/existential-crisis">Existential Crisis Kit</a></li>
-        <li><a href="/collections/sale">Sale Items</a></li>
+        <li><a href="{{ routes.collections_url }}/scented-candles">Scented Candles</a></li>
+        <li><a href="{{ routes.collections_url }}/sarcastic-gifts">Sarcastic Gifts</a></li>
+        <li><a href="{{ routes.collections_url }}/mood-enhancers">Mood "Enhancers"</a></li>
+        <li><a href="{{ routes.collections_url }}/existential-crisis">Existential Crisis Kit</a></li>
+        <li><a href="{{ routes.collections_url }}/sale">Sale Items</a></li>
       </ul>
     </div>
 
     <div class="footer__newsletter">
       <h3>Join Our Misery</h3>
-      <p>Subscribe to our newsletter for weekly doses of sarcasm, new product launches, and existential dread delivered straight to your inbox.</p>
+      <p>
+        Subscribe to our newsletter for weekly doses of sarcasm, new product launches, and existential dread delivered
+        straight to your inbox.
+      </p>
       {% form 'customer' %}
         <div class="newsletter-form">
           <input type="email" name="contact[email]" placeholder="your.email@sadness.com" required>
@@ -210,7 +213,10 @@
 
   <div class="footer__bottom">
     <div class="footer__copyright">
-      <p>&copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. All rights reserved. All happiness sold separately.</p>
+      <p>
+        &copy; {{ 'now' | date: '%Y' }}
+        {{ shop.name }}. All rights reserved. All happiness sold separately.
+      </p>
     </div>
 
     <div class="footer__social">

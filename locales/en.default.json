@@ -29,6 +29,9 @@
         "tiktok": "TikTok"
       }
     },
+    "share": {
+      "success_message": "Link copied to clipboard!"
+    },
     "continue_shopping": "Continue shopping",
     "pagination": {
       "label": "Pagination",
