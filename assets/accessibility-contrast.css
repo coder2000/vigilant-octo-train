@@ -6,9 +6,32 @@
   --text-medium-contrast: #f5f5f5;
   --text-low-contrast: #e8e8e8;
   --accent-high-contrast: #d4a574; /* Lighter brown for better contrast */
-  --error-color: #ff6b6b;
+  --error-color: #ff9999; /* Lighter red for better contrast on dark backgrounds */
   --success-color: #51cf66;
   --warning-color: #ffd43b;
+}
+
+/* Override any dark red colors that are hard to read */
+.price-compare,
+.product-card__price--compare,
+.search-result-price--compare {
+  color: #ff9999 !important; /* Light red for better visibility */
+  text-decoration: line-through;
+}
+
+/* Fix any remaining red text elements */
+.error-text,
+.cart-error,
+.form-error {
+  color: var(--error-color) !important;
+}
+
+/* Ensure sale/discount badges are readable */
+.badge--sale,
+.product-badge--sale {
+  background-color: var(--error-color) !important;
+  color: var(--color-background) !important;
+  font-weight: 600;
 }
 
 /* High contrast text for important elements */
@@ -97,8 +120,9 @@ input::placeholder, textarea::placeholder {
 /* Error and success states */
 .error {
   color: var(--error-color);
-  background-color: rgba(255, 107, 107, 0.1);
+  background-color: rgba(255, 153, 153, 0.15);
   border: 1px solid var(--error-color);
+  font-weight: 500;
 }
 
 .success {
